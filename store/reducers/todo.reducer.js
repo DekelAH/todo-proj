@@ -39,7 +39,7 @@ export function todoReducer(state = initialState, cmd) {
         case SET_FILTER_BY:
             return {
                 ...state,
-                filterBy: state.filterBy
+                filterBy: [...state.filterBy, cmd.filterBy]
             }
         default:
             return state

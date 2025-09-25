@@ -1,5 +1,5 @@
 import { todoService } from "../../services/todo.service.js";
-import { ADD_TODO, REMOVE_TODO, SET_TODOS, UPDATE_TODO } from "../reducers/todo.reducer.js";
+import { ADD_TODO, REMOVE_TODO, SET_FILTER_BY, SET_TODOS, UPDATE_TODO } from "../reducers/todo.reducer.js";
 import { store } from "../store.js";
 
 
@@ -41,6 +41,18 @@ export function saveTodo(todo) {
         })
         .catch(err => {
             console.log('Todo action -> Cannot update/add todo')
+            throw err
+        })
+}
+
+export function filterBy(currentFilterBy) {
+
+    return todoService.query(currentFilterBy)
+        .then(()=> {
+            store.dispatch({type: SET_FILTER_BY, filterBy: currentFilterBy})
+        })
+        .catch(err => {
+            console.log('Todo action -> Cannot filter todos')
             throw err
         })
 }

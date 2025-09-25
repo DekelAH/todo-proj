@@ -15,9 +15,10 @@ export function TodoIndex() {
     const [searchParams, setSearchParams] = useSearchParams()
     
     const todos = useSelector(storeState => storeState.todoModule.todos)
-    //const filterBy = useSelector(storeState => storeState.todoModule.filterBy)
-
+    const todosLength = useSelector(storeState => storeState.todoModule.todos.filter(todo => !todo.isDone).length)
+    
     const defaultFilter = todoService.getFilterFromSearchParams(searchParams)
+    //const filterBy = useSelector(storeState => storeState.todoModule.filterBy = defaultFilter)
     const [filterBy, setFilterBy] = useState(defaultFilter)
 
     useEffect(() => {
@@ -49,6 +50,8 @@ export function TodoIndex() {
             </div>
             <h2>Todos List</h2>
             <TodoList todos={todos} onRemoveTodo={onRemoveTodo} onToggleTodo={onToggleTodo} />
+            <hr />
+            <h2>{todosLength} todos left</h2>
             <hr />
             <h2>Todos Table</h2>
             <div style={{ width: '60%', margin: 'auto' }}>
