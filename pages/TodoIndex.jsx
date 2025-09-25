@@ -2,7 +2,7 @@ import { TodoFilter } from "../cmps/TodoFilter.jsx"
 import { TodoList } from "../cmps/TodoList.jsx"
 import { DataTable } from "../cmps/data-table/DataTable.jsx"
 import { todoService } from "../services/todo.service.js"
-import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
+import { showErrorMsg, showSuccessMsg, showUserInteraction } from "../services/event-bus.service.js"
 import { loadTodos, removeTodo, saveTodo, setFilterBy } from "../store/actions/todo.actions.js"
 import { setLoading } from "../store/actions/loading.actions.js"
 import { utilService } from "../services/util.service.js"
@@ -37,9 +37,20 @@ export function TodoIndex() {
     }
 
     function onRemoveTodo(todoId) {
-        removeTodo(todoId)
-            .then(() => showSuccessMsg(`Todo removed`))
-            .catch(() => showErrorMsg('Cannot remove todo ' + todoId))
+        showUserInteraction({
+            txt: 'Are you sure you want to remove this Todo?',
+            type: 'interaction',
+            button:
+            {
+                txt: 'Yes',
+                action: () => {
+                    removeTodo(todoId)
+                        .then(() => showSuccessMsg(`Todo removed`))
+                        .catch(() => showErrorMsg('Cannot remove todo ' + todoId))
+                }
+            }
+
+        })
     }
 
     function onToggleTodo(todo) {
@@ -50,6 +61,8 @@ export function TodoIndex() {
     }
 
     if (isLoading) return <div className="loading"><h1>Loading Todos...</h1></div>
+    if (!todos) return <div className="loading"><h1>No Todos to show</h1></div>
+
     return (
         <section className="todo-index">
             <TodoFilter filterBy={filterBy} onSetFilterBy={onSetFilterBy} />

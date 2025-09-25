@@ -11,6 +11,7 @@
 /* Components */
 @import "cmps/AppHeader.css";
 @import "cmps/UserMsg.css";
+@import "cmps/UserInteraction.css";
 @import "cmps/ToggleButton.css";
 @import "cmps/Chart.css";
 @import "cmps/DataTable.css";

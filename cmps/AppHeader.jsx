@@ -3,6 +3,7 @@ const { Link, NavLink } = ReactRouterDOM
 const { useNavigate } = ReactRouter
 
 import { UserMsg } from "./UserMsg.jsx"
+import { UserInteraction } from "./UserInteraction.jsx"
 import { LoginSignup } from './LoginSignup.jsx'
 import { showErrorMsg } from '../services/event-bus.service.js'
 import { logout } from '../store/actions/user.actions.js'
@@ -40,6 +41,7 @@ export function AppHeader() {
                 </nav>
             </section>
             <UserMsg />
+            <UserInteraction />
         </header>
     )
 }

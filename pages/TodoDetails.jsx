@@ -1,12 +1,15 @@
 import { todoService } from "../services/todo.service.js"
 import { showErrorMsg } from "../services/event-bus.service.js"
+import { setLoading } from "../store/actions/loading.actions.js"
 
 const { useState, useEffect } = React
+const { useSelector } = ReactRedux
 const { useParams, useNavigate, Link } = ReactRouterDOM
 
 export function TodoDetails() {
 
-    const [todo, setTodo] = useState(null)
+    const [todo, setTodo] = useState({})
+    const isLoading = useSelector(storeState => storeState.loadingModule.loading)
     const params = useParams()
     const navigate = useNavigate()
 
@@ -17,7 +20,10 @@ export function TodoDetails() {
 
     function loadTodo() {
         todoService.get(params.todoId)
-            .then(setTodo)
+            .then((todo) => {
+                setTodo(todo)
+                setLoading(false)
+            })
             .catch(err => {
                 console.error('err:', err)
                 showErrorMsg('Cannot load todo')
@@ -31,11 +37,11 @@ export function TodoDetails() {
         // navigate(-1)
     }
 
-    if (!todo) return <div>Loading...</div>
+    if (isLoading) return <div className="loading"><h1>Loading Todo...</h1></div>
     return (
         <section className="todo-details">
-            <h1 className={(todo.isDone)? 'done' : ''}>{todo.txt}</h1>
-            <h2>{(todo.isDone)? 'Done!' : 'In your list'}</h2>
+            <h1 className={(todo.isDone) ? 'done' : ''}>{todo.txt}</h1>
+            <h2>{(todo.isDone) ? 'Done!' : 'In your list'}</h2>
 
             <h1>Todo importance: {todo.importance}</h1>
             <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Enim rem accusantium, itaque ut voluptates quo? Vitae animi maiores nisi, assumenda molestias odit provident quaerat accusamus, reprehenderit impedit, possimus est ad?</p>
