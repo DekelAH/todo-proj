@@ -4,30 +4,34 @@ import { DataTable } from "../cmps/data-table/DataTable.jsx"
 import { todoService } from "../services/todo.service.js"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
 import { loadTodos, removeTodo, saveTodo, setFilterBy } from "../store/actions/todo.actions.js"
+import { setLoading } from "../store/actions/loading.actions.js"
+import { utilService } from "../services/util.service.js"
 
-const {  useEffect } = React
+const { useEffect } = React
 const { useSelector } = ReactRedux
 const { Link, useSearchParams } = ReactRouterDOM
 
 export function TodoIndex() {
 
-    // Special hook for accessing search-params:
     const [searchParams, setSearchParams] = useSearchParams()
-    
+
     const todos = useSelector(storeState => storeState.todoModule.todos)
-    const todosLength = useSelector(storeState => storeState.todoModule.todos.filter(todo => !todo.isDone).length)  
+    const todosLength = useSelector(storeState => storeState.todoModule.todos.filter(todo => !todo.isDone).length)
     const filterBy = useSelector(storeState => storeState.todoModule.filterBy)
-    
+    const isLoading = useSelector(storeState => storeState.loadingModule.loading)
+
     useEffect(() => {
-        
+
         const defaultFilter = todoService.getFilterFromSearchParams(searchParams)
         onSetFilterBy(defaultFilter)
-        loadTodos(defaultFilter)
-        .catch(() => showErrorMsg('Cannot load todos'))
+        utilService.debounce(loadTodos(defaultFilter)
+            .then(() => setLoading(false))
+            .catch(() => showErrorMsg('Cannot load todos')))
+
     }, [searchParams])
-    
-    function onSetFilterBy(filterBy){
-        
+
+    function onSetFilterBy(filterBy) {
+
         setSearchParams(filterBy)
         setFilterBy(filterBy)
     }
@@ -45,7 +49,7 @@ export function TodoIndex() {
             .catch(() => showErrorMsg('Cannot toggle todo '))
     }
 
-    if (!todos) return <div>Loading...</div>
+    if (isLoading) return <div className="loading"><h1>Loading Todos...</h1></div>
     return (
         <section className="todo-index">
             <TodoFilter filterBy={filterBy} onSetFilterBy={onSetFilterBy} />
