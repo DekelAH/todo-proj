@@ -1,3 +1,4 @@
+import { todoService } from "../../services/todo.service.js"
 
 export const SET_TODOS = 'SET_TODOS'
 export const ADD_TODO = 'ADD_TODO'
@@ -9,7 +10,7 @@ export const SET_FILTER_BY = 'SET_FILTER_BY'
 const initialState = {
 
     todos: [],
-    filterBy: {}
+    filterBy: todoService.getDefaultFilter()
 }
 
 export function todoReducer(state = initialState, cmd) {
@@ -39,7 +40,7 @@ export function todoReducer(state = initialState, cmd) {
         case SET_FILTER_BY:
             return {
                 ...state,
-                filterBy: [...state.filterBy, cmd.filterBy]
+                filterBy: cmd.filterBy
             }
         default:
             return state

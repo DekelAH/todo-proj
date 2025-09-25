@@ -45,14 +45,7 @@ export function saveTodo(todo) {
         })
 }
 
-export function filterBy(currentFilterBy) {
+export function setFilterBy(filterBy) {
 
-    return todoService.query(currentFilterBy)
-        .then(()=> {
-            store.dispatch({type: SET_FILTER_BY, filterBy: currentFilterBy})
-        })
-        .catch(err => {
-            console.log('Todo action -> Cannot filter todos')
-            throw err
-        })
+    return store.dispatch({ type: SET_FILTER_BY, filterBy })
 }

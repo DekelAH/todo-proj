@@ -14,8 +14,7 @@ export const todoService = {
     getFilterFromSearchParams,
     getImportanceStats,
 }
-// For Debug (easy access from console):
-window.cs = todoService
+
 
 function query(filterBy = {}) {
     return storageService.query(TODO_KEY)
